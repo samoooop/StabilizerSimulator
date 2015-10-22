@@ -1,11 +1,12 @@
 package structure;
 
 public class Leg extends Structure{
-	private Structure upperLeg;
-	private Structure lowerLeg;
+	private UpperLeg upperLeg;
+	private LowerLeg lowerLeg;
 	public Leg(){
 		super();
+		lowerLeg = new LowerLeg();
 		subStructure.add(lowerLeg);
-		lowerLeg.subStructure.add(upperLeg);
+		upperLeg = lowerLeg.upperLeg;
 	}
 }

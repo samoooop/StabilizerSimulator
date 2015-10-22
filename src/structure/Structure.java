@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 public class Structure {
 	public String name;
 	public List<Structure> subStructure;
+	public Structure myStructure;
 	public Color color = null;
 	public Vector3f location;
 	public Vector3f rotation;

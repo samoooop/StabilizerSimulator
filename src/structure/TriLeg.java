@@ -1,7 +1,7 @@
 package structure;
 
 public class TriLeg extends Structure{
-	private Structure[] leg = new Structure[3];
+	private Leg[] leg = new Leg[3];
 	public TriLeg(){
 		super();
 		leg[0] = new Leg(); // Leg number 1

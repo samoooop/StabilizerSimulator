@@ -3,7 +3,6 @@ package structure;
 import java.awt.Color;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 public class AdjustParameter {
 	public Color color;
