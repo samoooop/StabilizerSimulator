@@ -94,8 +94,9 @@ public class StabilizerLogic {
 			randLine.start = new Vector3f();
 			randLine.color = new Color((float)Math.random(),(float)Math.random(),(float)Math.random());
 			float trav = 10.0f * (float)Math.random();
-			randLine.end = new Vector3f((float)Math.random()*trav - trav/2,(float)Math.random()*trav - trav/2,(float)Math.random()*trav - trav/2);
-//			randLine.rotation = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
+			randLine.end = new Vector3f((float)Math.random()*trav - trav/2, 0, 0);
+			// randLine.end = new Vector3f((float)Math.random()*trav - trav/2,(float)Math.random()*trav - trav/2,(float)Math.random()*trav - trav/2);
+			randLine.rotation = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 //			randLine.start = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 //			randLine.end = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 			lastSubStructure.subStructure.add(randLine);
