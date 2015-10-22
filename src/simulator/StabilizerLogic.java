@@ -56,7 +56,7 @@ public class StabilizerLogic {
 
 	void renderLines() {
 		renderQueue.add(structure);
-		renderParameterQueue.add(new AdjustParameter(null, new Vector3f(), new Matrix4f()) );
+		renderParameterQueue.add(new AdjustParameter(null, new Matrix4f()) );
 		while(!renderQueue.isEmpty()){
 			Structure renderingStructure = renderQueue.poll();
 			AdjustParameter renderingParameter = renderParameterQueue.poll();

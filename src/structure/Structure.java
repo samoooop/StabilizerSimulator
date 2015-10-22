@@ -27,16 +27,10 @@ public class Structure {
 		subStructure = new ArrayList<Structure>();
 	}
 
-	private void drawThis(Color color, Vector3f location, Matrix4f rotation) {
+	private void drawThis(Color color, Matrix4f transformationMatrix) {
 		glPushMatrix();
-		Matrix4f transformationMatrix = new Matrix4f();
-		transformationMatrix.translate(location).mul(rotation);
 		Vector4f finalStart = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
 		Vector4f finalEnd = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
-		// glRotatef((float)Math.random() * 360,1.0f,0.0f,0.0f);
-		// glRotatef(rotation.m13,0.0f,1.0f,0.0f);
-		// glRotatef(rotation.m23,0.0f,0.0f,1.0f);
-		// System.out.println(location.toString());
 		glBegin(GL_LINES);
 		glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
 		glVertex3f(new Vector3f(finalStart.x, finalStart.y, finalStart.z));
@@ -45,21 +39,21 @@ public class Structure {
 		glPopMatrix();
 	}
 
-	public AdjustParameter draw(Color color, Vector3f location, Matrix4f rotation) {
+	public AdjustParameter draw(Color color, Matrix4f transformation) {
 		// locate real object location
-		location.add(this.location);
-		rotation.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
+		transformation.translate(this.location);
+		transformation.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
 		if (this.color != null)
 			color = this.color;
 		if (color == null)
 			color = Color.WHITE;
 		if (start != null && end != null)
-			drawThis(color, location, rotation);
-		return new AdjustParameter(color, location, rotation);
+			drawThis(color, transformation);
+		return new AdjustParameter(color, transformation);
 	}
 
 	public AdjustParameter draw(AdjustParameter param) {
-		return draw(param.color, param.location, param.rotation);
+		return draw(param.color, param.transformation);
 	}
 
 	private void glVertex3f(Vector3f vec) {
