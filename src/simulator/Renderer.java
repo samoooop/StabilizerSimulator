@@ -41,7 +41,7 @@ public class Renderer {
 
 		if (glfwInit() != GL11.GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
-
+		
 		glfwDefaultWindowHints(); // optional, the current window hints are
 									// already the default
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden
