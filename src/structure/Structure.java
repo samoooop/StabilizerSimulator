@@ -46,17 +46,18 @@ public class Structure {
 
 	public AdjustParameter draw(Color color, Matrix4f transformation) {
 		// locate real object location
-		System.out.println(this.getClass().getSimpleName() + ":" + new Vector4f().mul(transformation));
-		transformation.translate(this.location);
-		transformation.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
+		Matrix4f newTransMatrix = new Matrix4f(transformation);
+		System.out.println(this.getClass().getSimpleName() + ":" + new Vector4f().mul(newTransMatrix));
+		newTransMatrix.translate(this.location);
+		newTransMatrix.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
 		if (this.color != null)
 			color = this.color;
 		if (color == null)
 			color = Color.WHITE;
 		if (start != null && end != null)
-			drawThis(color, transformation);
+			drawThis(color, newTransMatrix);
 
-		return new AdjustParameter(color, transformation);
+		return new AdjustParameter(color, newTransMatrix);
 	}
 
 	public AdjustParameter draw(AdjustParameter param) {

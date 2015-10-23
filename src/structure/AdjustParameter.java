@@ -10,6 +10,6 @@ public class AdjustParameter {
 
 	public AdjustParameter(Color color, Matrix4f transformation) {
 		this.color = color;
-		this.transformation = new Matrix4f(transformation);
+		this.transformation = transformation;
 	}
 }
