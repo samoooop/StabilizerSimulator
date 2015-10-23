@@ -6,6 +6,9 @@ import java.util.Random;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
+import simulator.Renderer;
+import simulator.ModuleInterface;
+
 public class MotorTester {
 
 	public MotorTester() {
@@ -13,9 +16,38 @@ public class MotorTester {
 	}
 	
 	private static boolean floatIsEqual(float a, float b, float esp) { return Math.abs(a-b) < esp; }
+	
+	private static class MyModule implements ModuleInterface{
+
+		private boolean init = true;
+		private Vector3f hornLocation, platformLocation;
+		
+		public MyModule(Vector3f hornLocation, Vector3f platformLocation) {
+			super();
+			this.hornLocation = hornLocation;
+			this.platformLocation = platformLocation;
+		}
+
+		@Override
+		public void run(Renderer app) {
+			if(init){
+				
+				//app.logic.structure.subStructure.add()
+				init = false;
+			}
+		}
+		
+	}//*/
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		float hornLength = 4.f,
+				endRodLength = 12.f;
+		
+		Motor motor = new MotorModel2(hornLength, endRodLength);
+		
+		/// Core Calculation tester
+		
 		Vector3f handleLocation = new Vector3f(
 				0f,
 				0f,
@@ -27,13 +59,9 @@ public class MotorTester {
 
 		System.out.println("Input Handle Location" + handleLocation);
 		
-		float hornLength = 4.f,
-				endRodLength = 12.f;
-		
-		Motor motor = new MotorModel1(hornLength, endRodLength);
 		float motorAngle = 
-			(float)Math.PI/4;
-			//motor.getRotationAngle(handleLocation);
+			//(float)Math.PI/4;
+			motor.getRotationAngle(handleLocation);
 		
 		Vector3f hornLocation = new Vector3f(hornLength, 0, 0);
 		Matrix3f rotationMatMotorAngle = new Matrix3f();
@@ -48,6 +76,15 @@ public class MotorTester {
 			System.out.println("It works");
 		else
 			System.out.println("It does NOT work. Distance should be "+endRodLength);
+		
+		/*// Run Visual Simulation
+		
+		Renderer sim = new Renderer();
+		ModuleInterface myModule = new MyModule(hornLocation, handleLocation);
+		sim.addModule(myModule);
+		sim.run();
+		
+		//*/
 	}
 
 }
