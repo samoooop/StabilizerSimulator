@@ -14,7 +14,7 @@ public class Base extends Structure {
 	private Structure bottomEdge = new Structure();
 	private Structure leftEdge = new Structure();
 	private void init() {
-		this.rotation = new Vector3f((float)Math.PI /2,0.0f,0.0f);
+
 		createBaseTriangle();
 		triLeg = new TriLeg(topChamfer);
 		subStructure.add(triLeg);

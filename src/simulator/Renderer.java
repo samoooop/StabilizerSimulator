@@ -11,6 +11,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Renderer {
 	// We need to strongly reference callback instances.
@@ -18,6 +20,7 @@ public class Renderer {
 	private GLFWKeyCallback keyCallback;
 	private int WIDTH = 1024;
 	private int HEIGHT = 768;
+	private List<moduleInterface> modules = new ArrayList<moduleInterface>();
 	// The window handle
 	private long window;
 	FloatBuffer fb = BufferUtils.createFloatBuffer(16);
@@ -36,7 +39,6 @@ public class Renderer {
 			errorCallback.release();
 		}
 	}
-
 	private void init() {
 		glfwSetErrorCallback(errorCallback = Callbacks.errorCallbackPrint(System.err));
 
@@ -73,13 +75,19 @@ public class Renderer {
 
 		glfwShowWindow(window);
 	}
-
+	public void addModule(moduleInterface module){
+		if(module==null)return;
+		modules.add(module);
+	}
 	Matrix4f projMatrix = new Matrix4f();
 	Matrix4f viewMatrix = new Matrix4f();
 	long firstTime = System.nanoTime();
 	long frameCount = 0;
 	private void drawLogic() {
 		logic.update();
+		for(moduleInterface module:modules){
+			module.run(this);
+		}
 		glViewport(0, 0, WIDTH, HEIGHT);
 
 		projMatrix.setPerspective(45.0f, (float) WIDTH / HEIGHT, 0.01f, 100.0f).get(fb);
@@ -88,7 +96,7 @@ public class Renderer {
 		Vector3f eye = new Vector3f(0.0f,
 				(float)(logic.getZoom() * Math.cos(Math.atan(2))),
 				(float)(logic.getZoom() * Math.sin(Math.atan(2))));
-		viewMatrix.setLookAt(eye.x,eye.y, eye.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+		viewMatrix.setLookAt(eye.x,eye.y, -eye.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 		viewMatrix.rotateX(logic.getPitch()).rotateY(logic.getYaw()).rotateZ(logic.getRoll()).get(fb);
 		glMatrixMode(GL_MODELVIEW);
