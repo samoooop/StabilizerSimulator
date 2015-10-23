@@ -57,22 +57,12 @@ public class StabilizerControl {
 			frame.getContentPane().add(slider[i]);
 			
 		}
-		for(int i=0;i<6;i++){
-			JLabel lblNewLabel = new JLabel("Joint" + i);
-			frame.getContentPane().add(lblNewLabel);
-			
-			slider[i+6] = new JSlider();
-			slider[i+6].setMaximum(9000);
-			slider[i+6].setValue(4500);
-			frame.getContentPane().add(slider[i+6]);
-			
-		}
 
 	}
 	
 	public synchronized float[] getSliderData() throws InterruptedException{
 		float sliderData[] = new float[12];
-		for(int i=0;i<12;i++){
+		for(int i=0;i<6;i++){
 			sliderData[i] = slider[i].getValue()/100.0f;
 		}
 		return sliderData;

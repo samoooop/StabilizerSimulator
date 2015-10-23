@@ -7,12 +7,12 @@ import org.joml.Vector4f;
 public class Base extends Structure {
 	public TriLeg triLeg;
 	private float chamferLength = 0.8f, edgeLength = 4.0f;
-	private Structure topChamfer = new Structure();
-	private Structure leftChamfer = new Structure();
-	private Structure rightChamfer = new Structure();
-	private Structure rightEdge = new Structure();
-	private Structure bottomEdge = new Structure();
-	private Structure leftEdge = new Structure();
+	public Structure topChamfer = new Structure();
+	public Structure leftChamfer = new Structure();
+	public Structure rightChamfer = new Structure();
+	public Structure rightEdge = new Structure();
+	public Structure bottomEdge = new Structure();
+	public Structure leftEdge = new Structure();
 	private void init() {
 
 		createBaseTriangle();
