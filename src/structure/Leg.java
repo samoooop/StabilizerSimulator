@@ -8,7 +8,13 @@ import org.joml.Vector4f;
 public class Leg extends Structure {
 	private UpperLeg upperLeg;
 	private LowerLeg lowerLeg;
-
+	private float motorAngle;
+	public float getMotorAngle(){
+		return motorAngle;
+	}
+	public void setMotorAngle(){
+		
+	}
 	public Leg() {
 		super();
 		lowerLeg = new LowerLeg();

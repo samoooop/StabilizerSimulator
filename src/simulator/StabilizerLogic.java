@@ -11,12 +11,14 @@ import java.util.Queue;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import main.StabilizerControl;
 import structure.AdjustParameter;
 import structure.Axis;
 import structure.Stabilizer;
 import structure.Structure;
 
 public class StabilizerLogic {
+	public StabilizerControl window;
 	private boolean[] registeredKey = new boolean[1024];
 	private boolean[] isPressing = new boolean[1024];
 	private float pitch,roll,yaw,zoom=1;
@@ -51,6 +53,7 @@ public class StabilizerLogic {
 		structure = new Structure();
 		structure.subStructure.add(new Stabilizer());
 		structure.subStructure.add(new Axis());
+		StabilizerControl.main(this);
 	}
 
 	public void keyPress(int key, int scancode, int action, int mods) {
@@ -79,8 +82,18 @@ public class StabilizerLogic {
 	}
 	int objCount = 0;
 	private Structure lastSubStructure;
-	public void update() {
+	public void updateControlInput() throws InterruptedException{
+		float[] sliderData = window.getSliderData();
 		
+	}
+	public void update() {
+		if(window!=null){
+			try{
+				updateControlInput();	
+			}catch(InterruptedException e){
+				System.out.println(e.getMessage());
+			}
+		}
 		if(isPressing[GLFW_KEY_UP])
 			pitch-=rotationSpeed;
 		if(isPressing[GLFW_KEY_DOWN])

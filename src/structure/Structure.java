@@ -16,6 +16,8 @@ import org.lwjgl.opengl.GL11;
 public class Structure {
 	private int id;
 	private static int idCount=0;
+	private Vector3f finalStart;
+	private Vector3f finalEnd;
 	public String name = "";
 	public List<Structure> subStructure;
 	public Structure myStructure;
@@ -33,16 +35,24 @@ public class Structure {
 	public int getId(){
 		return id;
 	}
+	public Vector3f getFinalStart(){
+		return finalStart;
+	}
+	public Vector3f getFinalEnd(){
+		return finalEnd;
+	}
 	private void drawThis(Color color, Matrix4f transformationMatrix) {
 		glPushMatrix();
-		Vector4f finalStart = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
-		Vector4f finalEnd = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
+		Vector4f finalStart4f = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
+		Vector4f finalEnd4f = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
+		finalStart = new Vector3f(finalStart4f.x, finalStart4f.y, finalStart4f.z);
+		finalEnd = new Vector3f(finalEnd4f.x, finalEnd4f.y, finalEnd4f.z);
 		glLineWidth(5);
 
 		glBegin(GL_LINES);
 		glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
-		glVertex3f(new Vector3f(finalStart.x, finalStart.y, finalStart.z));
-		glVertex3f(new Vector3f(finalEnd.x, finalEnd.y, finalEnd.z));
+		glVertex3f(finalStart);
+		glVertex3f(finalEnd);
 		glEnd();
 		glPopMatrix();
 	}
