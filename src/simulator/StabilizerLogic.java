@@ -2,7 +2,7 @@ package simulator;
 
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Color;
 import java.util.LinkedList;
@@ -12,6 +12,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import structure.AdjustParameter;
+import structure.Axis;
 import structure.Stabilizer;
 import structure.Structure;
 
@@ -49,6 +50,7 @@ public class StabilizerLogic {
 		registerKey();
 		structure = new Structure();
 		structure.subStructure.add(new Stabilizer());
+		structure.subStructure.add(new Axis());
 	}
 
 	public void keyPress(int key, int scancode, int action, int mods) {

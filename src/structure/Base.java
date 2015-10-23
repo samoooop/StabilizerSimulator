@@ -6,35 +6,24 @@ import org.joml.Vector4f;
 
 public class Base extends Structure {
 	protected TriLeg triLeg;
-	private Structure chamfer;
-	private float chamferLength, edgeLength;
+	private float chamferLength = 0.8f, edgeLength = 4.0f;
 	private Structure topChamfer = new Structure();
 	private Structure leftChamfer = new Structure();
 	private Structure rightChamfer = new Structure();
 	private Structure rightEdge = new Structure();
 	private Structure bottomEdge = new Structure();
 	private Structure leftEdge = new Structure();
-	private void init(float chamferLength, float edgeLength) {
-		this.chamferLength = chamferLength;
-		this.edgeLength = edgeLength;
+	private void init() {
+		this.rotation = new Vector3f((float)Math.PI /2,0.0f,0.0f);
 		createBaseTriangle();
 		triLeg = new TriLeg(topChamfer);
 		subStructure.add(triLeg);
 	}
 
+
 	public Base() {
 		super();
-		init(1.0f, 4.0f);
-	}
-
-	public Base(float chamferLength) {
-		super();
-		init(chamferLength, 4.0f);
-	}
-
-	public Base(float chamferLength, float edgeLength) {
-		super();
-		init(chamferLength, edgeLength);
+		init();
 	}
 
 	private void createBaseTriangle() {

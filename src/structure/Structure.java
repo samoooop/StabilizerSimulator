@@ -23,6 +23,7 @@ public class Structure {
 	public Vector3f location;
 	public Vector3f rotation;
 	public Vector3f start, end;
+	public boolean forcedColor = false;
 	public Structure() {
 		location = new Vector3f();
 		rotation = new Vector3f();
@@ -36,6 +37,8 @@ public class Structure {
 		glPushMatrix();
 		Vector4f finalStart = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
 		Vector4f finalEnd = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
+		glLineWidth(5);
+
 		glBegin(GL_LINES);
 		glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
 		glVertex3f(new Vector3f(finalStart.x, finalStart.y, finalStart.z));
@@ -47,16 +50,12 @@ public class Structure {
 	public AdjustParameter draw(Color color, Matrix4f transformation) {
 		// locate real object location
 		Matrix4f newTransMatrix = new Matrix4f(transformation);
-		System.out.println(this.getClass().getSimpleName() + ":" + new Vector4f().mul(newTransMatrix));
 		newTransMatrix.translate(this.location);
 		newTransMatrix.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
-		if (this.color != null)
+		if (color == null && this.color != null || forcedColor)
 			color = this.color;
-		if (color == null)
-			color = Color.WHITE;
 		if (start != null && end != null)
-			drawThis(color, newTransMatrix);
-
+			drawThis(color ==null ? Color.white: color, newTransMatrix);
 		return new AdjustParameter(color, newTransMatrix);
 	}
 

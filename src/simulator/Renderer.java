@@ -16,8 +16,8 @@ public class Renderer {
 	// We need to strongly reference callback instances.
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
-	private int WIDTH = 640;
-	private int HEIGHT = 480;
+	private int WIDTH = 1024;
+	private int HEIGHT = 768;
 	// The window handle
 	private long window;
 	FloatBuffer fb = BufferUtils.createFloatBuffer(16);
@@ -87,8 +87,8 @@ public class Renderer {
 		glLoadMatrixf(fb);
 		Vector3f eye = new Vector3f(0.0f,
 				(float)(logic.getZoom() * Math.cos(Math.atan(2))),
-				-(float)(logic.getZoom() * Math.sin(Math.atan(2))));
-		viewMatrix.setLookAt(eye.x,eye.y, eye.z, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f);
+				(float)(logic.getZoom() * Math.sin(Math.atan(2))));
+		viewMatrix.setLookAt(eye.x,eye.y, eye.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
 		viewMatrix.rotateX(logic.getPitch()).rotateY(logic.getYaw()).rotateZ(logic.getRoll()).get(fb);
 		glMatrixMode(GL_MODELVIEW);
