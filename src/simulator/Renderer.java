@@ -20,11 +20,11 @@ public class Renderer {
 	private GLFWKeyCallback keyCallback;
 	private int WIDTH = 1024;
 	private int HEIGHT = 768;
-	private List<moduleInterface> modules = new ArrayList<moduleInterface>();
+	private List<ModuleInterface> modules = new ArrayList<ModuleInterface>();
 	// The window handle
 	private long window;
 	FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-	StabilizerLogic logic = new StabilizerLogic();
+	public StabilizerLogic logic = new StabilizerLogic();
 
 	public void run() {
 		try {
@@ -75,7 +75,7 @@ public class Renderer {
 
 		glfwShowWindow(window);
 	}
-	public void addModule(moduleInterface module){
+	public void addModule(ModuleInterface module){
 		if(module==null)return;
 		modules.add(module);
 	}
@@ -85,7 +85,7 @@ public class Renderer {
 	long frameCount = 0;
 	private void drawLogic() {
 		logic.update();
-		for(moduleInterface module:modules){
+		for(ModuleInterface module:modules){
 			module.run(this);
 		}
 		glViewport(0, 0, WIDTH, HEIGHT);

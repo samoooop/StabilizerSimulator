@@ -1,5 +1,5 @@
 package simulator;
 
-public interface moduleInterface {
+public interface ModuleInterface {
 	public void run(Renderer app);
 }

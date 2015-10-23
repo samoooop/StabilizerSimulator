@@ -23,7 +23,7 @@ public class StabilizerLogic {
 	private boolean[] isPressing = new boolean[1024];
 	private float pitch,roll,yaw,zoom=1;
 	private float rotationSpeed=(float)(1.0/180.0 * Math.PI);
-	private Structure structure;
+	public Structure structure;
 	private Queue<Structure> renderQueue = new LinkedList<Structure>();
 	private Queue<AdjustParameter> renderParameterQueue = new LinkedList<AdjustParameter>();
 	public float getPitch(){
