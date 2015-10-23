@@ -15,8 +15,8 @@ public class MotorModel2 extends Motor {
 	@Override
 	public float getRotationAngle(Vector3f locataionOfHandle) {
 		float c1,c2,c3;
-		c1 = locataionOfHandle.x;
-		c2 = locataionOfHandle.y;
+		c1 = locataionOfHandle.y;
+		c2 = locataionOfHandle.x;
 		c3 = (
 				  pow2(locataionOfHandle.x) 
 				+ pow2(locataionOfHandle.y) 
