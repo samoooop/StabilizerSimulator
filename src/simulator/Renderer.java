@@ -1,6 +1,7 @@
 package simulator;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -84,8 +85,10 @@ public class Renderer {
 		projMatrix.setPerspective(45.0f, (float) WIDTH / HEIGHT, 0.01f, 100.0f).get(fb);
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(fb);
-		
-		viewMatrix.setLookAt(0.0f, 1.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f);
+		Vector3f eye = new Vector3f(0.0f,
+				(float)(logic.getZoom() * Math.cos(Math.atan(2))),
+				-(float)(logic.getZoom() * Math.sin(Math.atan(2))));
+		viewMatrix.setLookAt(eye.x,eye.y, eye.z, 0.0f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f);
 
 		viewMatrix.rotateX(logic.getPitch()).rotateY(logic.getYaw()).rotateZ(logic.getRoll()).get(fb);
 		glMatrixMode(GL_MODELVIEW);

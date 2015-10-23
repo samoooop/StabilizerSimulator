@@ -12,12 +12,13 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import structure.AdjustParameter;
+import structure.Stabilizer;
 import structure.Structure;
 
 public class StabilizerLogic {
 	private boolean[] registeredKey = new boolean[1024];
 	private boolean[] isPressing = new boolean[1024];
-	private float pitch,roll,yaw;
+	private float pitch,roll,yaw,zoom=1;
 	private float rotationSpeed=(float)(1.0/180.0 * Math.PI);
 	private Structure structure;
 	private Queue<Structure> renderQueue = new LinkedList<Structure>();
@@ -31,7 +32,9 @@ public class StabilizerLogic {
 	public float getYaw(){
 		return yaw;
 	}
-
+	public float getZoom(){
+		return zoom;
+	}
 	private void registerKey() {
 		registeredKey[GLFW_KEY_UP] = true;// Press arrow to rotate view
 		registeredKey[GLFW_KEY_DOWN] = true;
@@ -45,6 +48,7 @@ public class StabilizerLogic {
 	public StabilizerLogic() {
 		registerKey();
 		structure = new Structure();
+		structure.subStructure.add(new Stabilizer());
 	}
 
 	public void keyPress(int key, int scancode, int action, int mods) {
@@ -83,6 +87,13 @@ public class StabilizerLogic {
 			yaw-=rotationSpeed;
 		if(isPressing[GLFW_KEY_RIGHT])
 			yaw+=rotationSpeed;
+		if(isPressing[GLFW_KEY_KP_SUBTRACT])
+			zoom+=1.0f;
+		if(isPressing[GLFW_KEY_KP_ADD]){
+			if(zoom>1)
+			zoom-=1.0f;
+		}
+			
 		if(isPressing[GLFW_KEY_SPACE]){
 			if(lastSubStructure == null){
 				lastSubStructure = structure;

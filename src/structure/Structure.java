@@ -14,20 +14,24 @@ import org.lwjgl.opengl.GL11;
 
 //Currently support only line;
 public class Structure {
-	public String name;
+	private int id;
+	private static int idCount=0;
+	public String name = "";
 	public List<Structure> subStructure;
 	public Structure myStructure;
 	public Color color = null;
 	public Vector3f location;
 	public Vector3f rotation;
 	public Vector3f start, end;
-
 	public Structure() {
 		location = new Vector3f();
 		rotation = new Vector3f();
 		subStructure = new ArrayList<Structure>();
+		this.id = Structure.idCount++;
 	}
-
+	public int getId(){
+		return id;
+	}
 	private void drawThis(Color color, Matrix4f transformationMatrix) {
 		glPushMatrix();
 		Vector4f finalStart = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
@@ -42,6 +46,7 @@ public class Structure {
 
 	public AdjustParameter draw(Color color, Matrix4f transformation) {
 		// locate real object location
+		System.out.println(this.getClass().getSimpleName() + ":" + new Vector4f().mul(transformation));
 		transformation.translate(this.location);
 		transformation.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
 		if (this.color != null)
@@ -50,6 +55,7 @@ public class Structure {
 			color = Color.WHITE;
 		if (start != null && end != null)
 			drawThis(color, transformation);
+
 		return new AdjustParameter(color, transformation);
 	}
 
@@ -60,6 +66,5 @@ public class Structure {
 	private void glVertex3f(Vector3f vec) {
 		GL11.glVertex3f(vec.x, vec.y, vec.z);
 	}
-
 
 }
