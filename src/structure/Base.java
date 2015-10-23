@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Base extends Structure {
-	protected TriLeg triLeg;
+	public TriLeg triLeg;
 	private float chamferLength = 0.8f, edgeLength = 4.0f;
 	private Structure topChamfer = new Structure();
 	private Structure leftChamfer = new Structure();

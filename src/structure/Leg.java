@@ -6,9 +6,9 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 public class Leg extends Structure {
-	private UpperLeg upperLeg;
-	private LowerLeg lowerLeg;
-	private float motorAngle;
+	public UpperLeg upperLeg;
+	public LowerLeg lowerLeg;
+	public float motorAngle;
 	public float getMotorAngle(){
 		return motorAngle;
 	}

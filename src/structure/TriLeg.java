@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class TriLeg extends Structure{
-	private Leg[] leg = new Leg[6];
+	public Leg[] leg = new Leg[6];
 	public TriLeg(Structure chamfer){
 		super();
 		Matrix4f legRotation = new Matrix4f().rotateY((float) Math.toRadians(-120));

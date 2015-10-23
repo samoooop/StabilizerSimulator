@@ -26,6 +26,7 @@ public class StabilizerLogic {
 	public Structure structure;
 	private Queue<Structure> renderQueue = new LinkedList<Structure>();
 	private Queue<AdjustParameter> renderParameterQueue = new LinkedList<AdjustParameter>();
+	private Stabilizer stabilizer;
 	public float getPitch(){
 		return pitch;
 	}
@@ -51,7 +52,8 @@ public class StabilizerLogic {
 	public StabilizerLogic() {
 		registerKey();
 		structure = new Structure();
-		structure.subStructure.add(new Stabilizer());
+		stabilizer = new Stabilizer();
+		structure.subStructure.add(stabilizer);
 		structure.subStructure.add(new Axis());
 		StabilizerControl.main(this);
 	}
@@ -84,6 +86,7 @@ public class StabilizerLogic {
 	private Structure lastSubStructure;
 	public void updateControlInput() throws InterruptedException{
 		float[] sliderData = window.getSliderData();
+		stabilizer.base.triLeg.leg[0].rotation.x = (float)Math.toRadians(sliderData[0]);
 		
 	}
 	public void update() {

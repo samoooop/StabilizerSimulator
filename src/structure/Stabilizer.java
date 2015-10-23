@@ -1,8 +1,8 @@
 package structure;
 
 public class Stabilizer extends Structure{
-	private Base base;
-	private Platform platform;
+	public Base base;
+	public Platform platform;
 	public Stabilizer(){
 		super();
 		base = new Base();

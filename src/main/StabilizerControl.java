@@ -63,7 +63,7 @@ public class StabilizerControl {
 	public synchronized float[] getSliderData() throws InterruptedException{
 		float sliderVal[] = new float[6];
 		for(int i=0;i<6;i++){
-			sliderVal[i] = slider[i].getValue();
+			sliderVal[i] = slider[i].getValue()/100.0f;
 		}
 		return sliderVal;
 	}
