@@ -8,11 +8,11 @@ public class Base extends Structure {
 	public TriLeg triLeg;
 	private float chamferLength = 0.8f, edgeLength = 4.0f;
 	public Structure topChamfer = new Structure();
-	public Structure leftChamfer = new Structure();
 	public Structure rightChamfer = new Structure();
-	public Structure rightEdge = new Structure();
-	public Structure bottomEdge = new Structure();
+	public Structure leftChamfer = new Structure();
 	public Structure leftEdge = new Structure();
+	public Structure bottomEdge = new Structure();
+	public Structure rightEdge = new Structure();
 	private void init() {
 
 		createBaseTriangle();
@@ -50,33 +50,33 @@ public class Base extends Structure {
 		chamferStart.mul(chamferRotation);
 		chamferEnd.mul(chamferRotation);
 
-		leftChamfer.start = new Vector3f(chamferStart.x, chamferStart.y, chamferStart.z);
-		leftChamfer.end = new Vector3f(chamferEnd.x, chamferEnd.y, chamferEnd.z);
+		rightChamfer.start = new Vector3f(chamferStart.x, chamferStart.y, chamferStart.z);
+		rightChamfer.end = new Vector3f(chamferEnd.x, chamferEnd.y, chamferEnd.z);
 
 		chamferStart.mul(chamferRotation);
 		chamferEnd.mul(chamferRotation);
 
-		rightChamfer.start = new Vector3f(chamferStart.x, chamferStart.y, chamferStart.z);
-		rightChamfer.end = new Vector3f(chamferEnd.x, chamferEnd.y, chamferEnd.z);
+		leftChamfer.start = new Vector3f(chamferStart.x, chamferStart.y, chamferStart.z);
+		leftChamfer.end = new Vector3f(chamferEnd.x, chamferEnd.y, chamferEnd.z);
 		
 		subStructure.add(topChamfer);
-		subStructure.add(leftChamfer);
 		subStructure.add(rightChamfer);
+		subStructure.add(leftChamfer);
 	}
 	
 	private void drawEdge(){
-		rightEdge = new Structure();
-		bottomEdge = new Structure();
 		leftEdge = new Structure();
-		rightEdge.start = new Vector3f(topChamfer.end);
-		rightEdge.end = new Vector3f(rightChamfer.start);
-		bottomEdge.start = new Vector3f(rightChamfer.end);
-		bottomEdge.end = new Vector3f(leftChamfer.start);
-		leftEdge.start = new Vector3f(leftChamfer.end);
-		leftEdge.end = new Vector3f(topChamfer.start);
+		bottomEdge = new Structure();
+		rightEdge = new Structure();
+		leftEdge.start = new Vector3f(topChamfer.end);
+		leftEdge.end = new Vector3f(leftChamfer.start);
+		bottomEdge.start = new Vector3f(leftChamfer.end);
+		bottomEdge.end = new Vector3f(rightChamfer.start);
+		rightEdge.start = new Vector3f(rightChamfer.end);
+		rightEdge.end = new Vector3f(topChamfer.start);
 		
-		subStructure.add(leftEdge);
 		subStructure.add(rightEdge);
+		subStructure.add(leftEdge);
 		subStructure.add(bottomEdge);
 		
 	}

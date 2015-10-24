@@ -44,7 +44,7 @@ public class StabilizerControl {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 479, 526);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		for(int i=0;i<6;i++){
@@ -57,12 +57,23 @@ public class StabilizerControl {
 			frame.getContentPane().add(slider[i]);
 			
 		}
+		String word[] = {"pitch","roll","yaw","x","y","z"};
+		for(int i=0;i<6;i++){
+			JLabel lblNewLabel = new JLabel(word[i]);
+			frame.getContentPane().add(lblNewLabel);
+			
+			slider[i+6] = new JSlider();
+			slider[i+6].setMaximum(9000);
+			slider[i+6].setValue(4500);
+			frame.getContentPane().add(slider[i+6]);
+			
+		}
 
 	}
 	
 	public synchronized float[] getSliderData() throws InterruptedException{
 		float sliderData[] = new float[12];
-		for(int i=0;i<6;i++){
+		for(int i=0;i<12;i++){
 			sliderData[i] = slider[i].getValue()/100.0f;
 		}
 		return sliderData;

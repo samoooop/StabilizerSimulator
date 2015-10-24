@@ -18,7 +18,7 @@ public class UpperLeg extends Structure{
 		this.color = Color.PINK;
 		this.forcedColor = true;
 		start = new Vector3f();
-		end = new Vector3f(0.0f, 1.0f, 0.0f);
-		
+		end = new Vector3f();
+		setLength(1.5f);
 	}
 }

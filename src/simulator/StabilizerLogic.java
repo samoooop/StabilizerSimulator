@@ -99,9 +99,15 @@ public class StabilizerLogic {
 			Leg leg0, leg1;
 			leg0 = stabilizer.base.triLeg.leg[i * 2];
 			leg1 = stabilizer.base.triLeg.leg[i * 2 + 1];
-			leg0.rotation.z = (float) Math.toRadians(90 - sliderData[i * 2]);
-			leg1.rotation.z = (float) Math.toRadians(-90 +sliderData[i * 2 + 1] );
+			leg0.setMotorAngle(sliderData[i * 2], false);
+			leg1.setMotorAngle(sliderData[i * 2 + 1], true);
+			
 		}
+		stabilizer.platform.setPlatformRotation(new Vector3f(
+				(float) Math.toRadians(-sliderData[6]),
+				(float) Math.toRadians(-sliderData[8]),
+				(float) Math.toRadians(-sliderData[7])
+				));
 
 	}
 
@@ -140,49 +146,9 @@ public class StabilizerLogic {
 			randLine.color = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
 			float trav = 10.0f * (float) Math.random();
 			randLine.end = new Vector3f((float) Math.random() * trav - trav / 2, 0, 0);
-			// randLine.end = new Vector3f((float)Math.random()*trav -
-			// trav/2,(float)Math.random()*trav -
-			// trav/2,(float)Math.random()*trav - trav/2);
 			randLine.rotation = new Vector3f((float) Math.random(), (float) Math.random(), (float) Math.random());
-			// randLine.start = new
-			// Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
-			// randLine.end = new
-			// Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 			lastSubStructure.subStructure.add(randLine);
 			lastSubStructure = randLine;
 		}
 	}
 }
-
-// glBegin(GL_QUADS);
-// glColor3f( 0.0f, 0.0f, 0.2f );
-// glVertex3f( 0.5f, -0.5f, -0.5f );
-// glVertex3f( -0.5f, -0.5f, -0.5f );
-// glVertex3f( -0.5f, 0.5f, -0.5f );
-// glVertex3f( 0.5f, 0.5f, -0.5f );
-// glColor3f( 0.0f, 0.0f, 1.0f );
-// glVertex3f( 0.5f, -0.5f, 0.5f );
-// glVertex3f( 0.5f, 0.5f, 0.5f );
-// glVertex3f( -0.5f, 0.5f, 0.5f );
-// glVertex3f( -0.5f, -0.5f, 0.5f );
-// glColor3f( 1.0f, 0.0f, 0.0f );
-// glVertex3f( 0.5f, -0.5f, -0.5f );
-// glVertex3f( 0.5f, 0.5f, -0.5f );
-// glVertex3f( 0.5f, 0.5f, 0.5f );
-// glVertex3f( 0.5f, -0.5f, 0.5f );
-// glColor3f( 0.2f, 0.0f, 0.0f );
-// glVertex3f( -0.5f, -0.5f, 0.5f );
-// glVertex3f( -0.5f, 0.5f, 0.5f );
-// glVertex3f( -0.5f, 0.5f, -0.5f );
-// glVertex3f( -0.5f, -0.5f, -0.5f );
-// glColor3f( 0.0f, 1.0f, 0.0f );
-// glVertex3f( 0.5f, 0.5f, 0.5f );
-// glVertex3f( 0.5f, 0.5f, -0.5f );
-// glVertex3f( -0.5f, 0.5f, -0.5f );
-// glVertex3f( -0.5f, 0.5f, 0.5f );
-// glColor3f( 0.0f, 0.2f, 0.0f );
-// glVertex3f( 0.5f, -0.5f, -0.5f );
-// glVertex3f( 0.5f, -0.5f, 0.5f );
-// glVertex3f( -0.5f, -0.5f, 0.5f );
-// glVertex3f( -0.5f, -0.5f, -0.5f );
-// glEnd();

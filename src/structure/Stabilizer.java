@@ -6,7 +6,7 @@ public class Stabilizer extends Structure{
 	public Stabilizer(){
 		super();
 		base = new Base();
-		platform = new Platform();
+		platform = new Platform(base.triLeg);
 		subStructure.add(base);
 		subStructure.add(platform);
 	}

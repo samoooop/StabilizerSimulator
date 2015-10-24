@@ -1,21 +1,71 @@
 package structure;
 
+import java.awt.Color;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Platform extends Structure {
 	private float chamferLength = 0.8f, edgeLength = 4.0f;
+	
 	public Structure topChamfer = new Structure();
 	public Structure leftChamfer = new Structure();
 	public Structure rightChamfer = new Structure();
 	public Structure rightEdge = new Structure();
 	public Structure bottomEdge = new Structure();
 	public Structure leftEdge = new Structure();
-	public Platform() {
+	public TriLeg triLeg;
+	private Vector3f pRotation,pTranslation;
+	public Vector3f getPlatformRotation(){
+		return new Vector3f(pRotation);
+	}
+	public Vector3f getPlatformTranslation(){
+		return new Vector3f(pTranslation);	
+	}
+	public void setPlatformRotation(Vector3f angles){
+		pRotation = angles;
+		adjustTriLeg();
+	}
+	public void setPlatformTranslation(Vector3f translation){
+		pTranslation = translation;
+		adjustTriLeg();
+	}
+	private double p2(double v){//power of 2
+		return v*v;
+	}
+	private float getMotorAngle(Vector3f platform,float lLength,float hLength){//plane-transformed(PlatformAngle - motor) input
+		float finalMAngle;
+		double lShadow,hShadow,shadow;
+		double magicC;
+		shadow = new Vector3f(platform.x,platform.y,0.0f).length();
+		lShadow = lLength;
+		hShadow = Math.sqrt(p2(hLength) - p2(platform.z));
+		magicC  = (p2(shadow)+p2(lShadow)- p2(hShadow))/(shadow*2);
+		System.out.println(platform.x+ " " + platform.y+ " " + platform.z);
+		System.out.println(lLength + " " +  hLength);
+		System.out.println(shadow + " " + lShadow + " " +  hShadow + " " + shadow + " " + magicC);
+		System.out.println((float)Math.acos(magicC/lShadow));
+		return (float)Math.acos(magicC/lShadow);
+	}
+	public void adjustTriLeg(){
+		if(topChamfer.getFinalEnd()==null)return;
+		triLeg.leg[0].setMotorAngle(getMotorAngle(topChamfer.getFinalEnd(), 
+				triLeg.leg[0].lowerLeg.getLength(), 
+				triLeg.leg[0].upperLeg.getLength()
+				), false);
+	}
+	@Override
+	public AdjustParameter draw(Color color,Matrix4f transformMatrix){
+		rotation = pRotation;
+		location = pTranslation;
+		return super.draw(color,transformMatrix);
+	}
+	public Platform(TriLeg triLeg) {
 		super();
+		this.triLeg = triLeg;
 		createPlatformTriangle();
-		location.y = 1.2f;
+		setPlatformTranslation(new Vector3f(0.0f,1.0f,0.0f));
 	}
 	private void createPlatformTriangle() {
 		myStructure = new Structure();
@@ -23,7 +73,9 @@ public class Platform extends Structure {
 		drawChamfer();
 		drawEdge();
 	}
-
+	
+	
+	
 	private void drawChamfer() {
 		float cornerToCenter = (float) (edgeLength / Math.sqrt(3));
 		// float edgeToCenter =cornerToCenter/2;

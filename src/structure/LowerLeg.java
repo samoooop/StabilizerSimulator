@@ -15,7 +15,8 @@ public class LowerLeg extends Structure {
 	public LowerLeg() {
 		super();
 		start = new Vector3f();
-		end = new Vector3f(0.0f, 0.4f, 0.0f);
+		end = new Vector3f();
+		setLength(0.4f);
 		upperLeg = new UpperLeg();
 		upperLeg.location = end;
 		subStructure.add(upperLeg);
