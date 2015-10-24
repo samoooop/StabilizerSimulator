@@ -104,11 +104,15 @@ public class StabilizerLogic {
 			
 		}
 		stabilizer.platform.setPlatformRotation(new Vector3f(
-				(float) Math.toRadians(-sliderData[6]),
-				(float) Math.toRadians(-sliderData[8]),
-				(float) Math.toRadians(-sliderData[7])
+				(float) Math.toRadians(-(sliderData[6]-45.0f)),
+				(float) Math.toRadians(-(sliderData[8]-45.0f)),
+				(float) Math.toRadians(-(sliderData[7]-45.0f))
 				));
-
+		stabilizer.platform.setPlatformTranslation(new Vector3f(
+				sliderData[9] - 1.0f,
+				sliderData[10] - 1.0f+1.25f,
+				sliderData[11] - 1.0f
+				));
 	}
 
 	public void update() {

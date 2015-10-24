@@ -39,6 +39,8 @@ public class StabilizerControl {
 		initialize();
 	}
 	JSlider slider[] = new JSlider[12];
+	String word[] = {"pitch","roll","yaw","x","y","z"};
+	int max[] = {9000,9000,9000,200,200,200};
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -57,14 +59,14 @@ public class StabilizerControl {
 			frame.getContentPane().add(slider[i]);
 			
 		}
-		String word[] = {"pitch","roll","yaw","x","y","z"};
+
 		for(int i=0;i<6;i++){
 			JLabel lblNewLabel = new JLabel(word[i]);
 			frame.getContentPane().add(lblNewLabel);
 			
 			slider[i+6] = new JSlider();
-			slider[i+6].setMaximum(9000);
-			slider[i+6].setValue(4500);
+			slider[i+6].setMaximum(max[i]);
+			slider[i+6].setValue(max[i]/2);
 			frame.getContentPane().add(slider[i+6]);
 			
 		}

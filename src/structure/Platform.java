@@ -2,6 +2,8 @@ package structure;
 
 import java.awt.Color;
 
+import org.joml.AxisAngle4f;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -15,7 +17,8 @@ public class Platform extends Structure {
 	public Structure rightEdge = new Structure();
 	public Structure bottomEdge = new Structure();
 	public Structure leftEdge = new Structure();
-	public TriLeg triLeg;
+	public Stabilizer stabilizer;
+	private TriLeg triLeg;
 	private Vector3f pRotation,pTranslation;
 	public Vector3f getPlatformRotation(){
 		return new Vector3f(pRotation);
@@ -34,7 +37,7 @@ public class Platform extends Structure {
 	private double p2(double v){//power of 2
 		return v*v;
 	}
-	private float getMotorAngle(Vector3f platform,float lLength,float hLength){//plane-transformed(PlatformAngle - motor) input
+	private float getMotorAngle(Vector3f platform,float lLength,float hLength) throws MotorAdjustmentException{//plane-transformed(PlatformAngle - motor) input
 		float finalMAngle;
 		double lShadow,hShadow,shadow;
 		double magicC;
@@ -42,18 +45,43 @@ public class Platform extends Structure {
 		lShadow = lLength;
 		hShadow = Math.sqrt(p2(hLength) - p2(platform.z));
 		magicC  = (p2(shadow)+p2(lShadow)- p2(hShadow))/(shadow*2);
-		System.out.println(platform.x+ " " + platform.y+ " " + platform.z);
-		System.out.println(lLength + " " +  hLength);
-		System.out.println(shadow + " " + lShadow + " " +  hShadow + " " + shadow + " " + magicC);
-		System.out.println((float)Math.acos(magicC/lShadow));
-		return (float)Math.acos(magicC/lShadow);
+		if(shadow > lShadow + hShadow) throw new MotorAdjustmentException("Unextendable length");
+//		System.out.println(platform.x+ " " + platform.y+ " " + platform.z);
+//		System.out.println(lLength + " " +  hLength);
+//		System.out.println(shadow + " " + lShadow + " " +  hShadow + " "+ " " + magicC);
+//		System.out.println((float)Math.acos(magicC/lShadow));
+		finalMAngle = (float)(Math.PI/2 - Math.acos(magicC/lShadow));
+		if(Float.isNaN(finalMAngle)) throw new MotorAdjustmentException("impossible rotation");
+		return finalMAngle;
 	}
 	public void adjustTriLeg(){
-		if(topChamfer.getFinalEnd()==null)return;
-		triLeg.leg[0].setMotorAngle(getMotorAngle(topChamfer.getFinalEnd(), 
-				triLeg.leg[0].lowerLeg.getLength(), 
-				triLeg.leg[0].upperLeg.getLength()
-				), false);
+		Vector3f reference[] = {
+				topChamfer.getFinalStart(),
+				topChamfer.getFinalEnd(),
+				leftChamfer.getFinalStart(),
+				leftChamfer.getFinalEnd(),
+				rightChamfer.getFinalStart(),
+				rightChamfer.getFinalEnd()
+		}; 
+		Matrix3f rotMat120 = new Matrix3f();
+		for(int i=0;i<6;i++){
+			try{
+				if(reference[i]==null)return;
+				reference[i] = new Vector3f(reference[i]);
+//				Vector3f motor = new Vector3f(triLeg.leg[i].)
+				Vector3f diff = new Vector3f();
+				reference[i].sub(triLeg.leg[i].lowerLeg.getFinalStart(), diff);
+				triLeg.leg[i].setMotorAngleRadian(getMotorAngle(diff, 
+						triLeg.leg[i].lowerLeg.getLength(), 
+						triLeg.leg[i].upperLeg.getLength()
+						),i%2==1);
+				reference[i].sub(triLeg.leg[i].upperLeg.getFinalStart(),triLeg.leg[i].upperLeg.end);
+				triLeg.leg[i].upperLeg.rotation.z = -triLeg.leg[i].rotation.z;
+			}catch(MotorAdjustmentException failMovement){
+				System.out.println(failMovement + triLeg.leg[i].name);
+			}
+		}
+
 	}
 	@Override
 	public AdjustParameter draw(Color color,Matrix4f transformMatrix){
@@ -61,9 +89,10 @@ public class Platform extends Structure {
 		location = pTranslation;
 		return super.draw(color,transformMatrix);
 	}
-	public Platform(TriLeg triLeg) {
+	public Platform(Stabilizer stabilizer) {
 		super();
-		this.triLeg = triLeg;
+		this.triLeg = stabilizer.base.triLeg;
+		this.stabilizer = stabilizer;
 		createPlatformTriangle();
 		setPlatformTranslation(new Vector3f(0.0f,1.0f,0.0f));
 	}
@@ -122,5 +151,11 @@ public class Platform extends Structure {
 		subStructure.add(rightEdge);
 		subStructure.add(bottomEdge);
 		
+	}
+	public class MotorAdjustmentException extends Exception{
+		public MotorAdjustmentException(String message) {
+			super(message);
+			// TODO Auto-generated constructor stub
+		}
 	}
 }

@@ -13,7 +13,10 @@ public class Leg extends Structure {
 		return motorAngle;
 	}
 	public void setMotorAngle(float angle,boolean inverse){
-		rotation.z = (float) Math.toRadians(90 - angle);
+		setMotorAngleRadian((float)Math.toRadians(angle), inverse);
+	}
+	public void setMotorAngleRadian(float angle,boolean inverse){
+		rotation.z = (float)(Math.PI/2) - angle;
 		if(inverse)rotation.z*=-1;
 	}
 	public Leg() {
