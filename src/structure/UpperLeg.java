@@ -9,6 +9,9 @@ public class UpperLeg extends Structure{
 	public float getLength(){
 		return length;
 	}
+	public float getActualLength(){
+		return new Vector3f(end).sub(start).length();
+	}
 	public void setLength(float length){
 		this.length = length;
 		this.end.y = length;

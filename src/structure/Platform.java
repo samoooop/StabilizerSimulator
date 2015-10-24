@@ -50,7 +50,7 @@ public class Platform extends Structure {
 //		System.out.println(lLength + " " +  hLength);
 //		System.out.println(shadow + " " + lShadow + " " +  hShadow + " "+ " " + magicC);
 //		System.out.println((float)Math.acos(magicC/lShadow));
-		finalMAngle = (float)(Math.PI/2 - Math.acos(magicC/lShadow));
+		finalMAngle = (float)(Math.PI/2 - Math.acos(magicC/lShadow) + Math.asin(Math.abs(platform.x)/shadow));
 		if(Float.isNaN(finalMAngle)) throw new MotorAdjustmentException("impossible rotation");
 		return finalMAngle;
 	}
@@ -71,17 +71,17 @@ public class Platform extends Structure {
 				Vector3f motor = new Vector3f(triLeg.leg[i].lowerLeg.getFinalStart());
 				Vector3f diff = new Vector3f();
 				reference[i].sub(motor, diff);
-//				diff.mul(rotMat120);
-				System.out.println(i +":"+diff);
-				triLeg.leg[i].setMotorAngleRadian(getMotorAngle(diff, 
+				float motorAngle = getMotorAngle(diff, 
 						triLeg.leg[i].lowerLeg.getLength(), 
 						triLeg.leg[i].upperLeg.getLength()
-						),i%2==1);
+						);
+				triLeg.leg[i].setMotorAngle(motorAngle,i%2==1);
 				reference[i].sub(triLeg.leg[i].upperLeg.getFinalStart(),triLeg.leg[i].upperLeg.end);
 				triLeg.leg[i].upperLeg.end.mul(rotMat120);
 				triLeg.leg[i].upperLeg.rotation.z = -triLeg.leg[i].rotation.z;
+//				System.out.println(i + ":"+motorAngle+":" + triLeg.leg[i].upperLeg.getActualLength());
 			}catch(MotorAdjustmentException failMovement){
-//				System.out.println(failMovement + triLeg.leg[i].name);
+				System.out.println(failMovement + triLeg.leg[i].name);
 			}
 		}
 

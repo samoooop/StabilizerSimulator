@@ -40,6 +40,7 @@ public class StabilizerControl {
 	}
 	JSlider slider[] = new JSlider[12];
 	String word[] = {"pitch","roll","yaw","x","y","z"};
+	JLabel debug;
 	int max[] = {9000,9000,9000,200,200,200};
 	/**
 	 * Initialize the contents of the frame.
@@ -70,6 +71,8 @@ public class StabilizerControl {
 			frame.getContentPane().add(slider[i+6]);
 			
 		}
+		debug = new JLabel("DEBUG MESSAGE HERE");
+		frame.getContentPane().add(debug);
 
 	}
 	
@@ -81,4 +84,7 @@ public class StabilizerControl {
 		return sliderData;
 	}
 
+	public synchronized void display(String message) throws InterruptedException{
+		debug.setText(message);
+	}
 }
