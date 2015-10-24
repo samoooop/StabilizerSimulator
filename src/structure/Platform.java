@@ -63,22 +63,25 @@ public class Platform extends Structure {
 				rightChamfer.getFinalStart(),
 				rightChamfer.getFinalEnd()
 		}; 
-		Matrix3f rotMat120 = new Matrix3f();
 		for(int i=0;i<6;i++){
 			try{
 				if(reference[i]==null)return;
+				Matrix3f rotMat120 = new Matrix3f().rotateY((float)Math.toRadians(-120*(i/2)));
 				reference[i] = new Vector3f(reference[i]);
-//				Vector3f motor = new Vector3f(triLeg.leg[i].)
+				Vector3f motor = new Vector3f(triLeg.leg[i].lowerLeg.getFinalStart());
 				Vector3f diff = new Vector3f();
-				reference[i].sub(triLeg.leg[i].lowerLeg.getFinalStart(), diff);
+				reference[i].sub(motor, diff);
+//				diff.mul(rotMat120);
+				System.out.println(i +":"+diff);
 				triLeg.leg[i].setMotorAngleRadian(getMotorAngle(diff, 
 						triLeg.leg[i].lowerLeg.getLength(), 
 						triLeg.leg[i].upperLeg.getLength()
 						),i%2==1);
 				reference[i].sub(triLeg.leg[i].upperLeg.getFinalStart(),triLeg.leg[i].upperLeg.end);
+				triLeg.leg[i].upperLeg.end.mul(rotMat120);
 				triLeg.leg[i].upperLeg.rotation.z = -triLeg.leg[i].rotation.z;
 			}catch(MotorAdjustmentException failMovement){
-				System.out.println(failMovement + triLeg.leg[i].name);
+//				System.out.println(failMovement + triLeg.leg[i].name);
 			}
 		}
 
@@ -117,7 +120,7 @@ public class Platform extends Structure {
 
 		Vector4f chamferStart = new Vector4f(topChamfer.start, 0);
 		Vector4f chamferEnd = new Vector4f(topChamfer.end, 0);
-		Matrix4f chamferRotation = new Matrix4f().rotateY((float) Math.toRadians(-120));
+		Matrix4f chamferRotation = new Matrix4f().rotateY((float) Math.toRadians(120));
 
 		chamferStart.mul(chamferRotation);
 		chamferEnd.mul(chamferRotation);
@@ -137,18 +140,18 @@ public class Platform extends Structure {
 	}
 	
 	private void drawEdge(){
-		rightEdge = new Structure();
-		bottomEdge = new Structure();
 		leftEdge = new Structure();
-		rightEdge.start = new Vector3f(topChamfer.end);
-		rightEdge.end = new Vector3f(rightChamfer.start);
-		bottomEdge.start = new Vector3f(rightChamfer.end);
-		bottomEdge.end = new Vector3f(leftChamfer.start);
-		leftEdge.start = new Vector3f(leftChamfer.end);
-		leftEdge.end = new Vector3f(topChamfer.start);
+		bottomEdge = new Structure();
+		rightEdge = new Structure();
+		leftEdge.start = new Vector3f(topChamfer.end);
+		leftEdge.end = new Vector3f(leftChamfer.start);
+		bottomEdge.start = new Vector3f(leftChamfer.end);
+		bottomEdge.end = new Vector3f(rightChamfer.start);
+		rightEdge.start = new Vector3f(rightChamfer.end);
+		rightEdge.end = new Vector3f(topChamfer.start);
 		
-		subStructure.add(leftEdge);
 		subStructure.add(rightEdge);
+		subStructure.add(leftEdge);
 		subStructure.add(bottomEdge);
 		
 	}
