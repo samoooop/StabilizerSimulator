@@ -76,14 +76,19 @@ public class StabilizerControl {
 
 	}
 	
-	public synchronized float[] getSliderData() throws InterruptedException{
-		float sliderData[] = new float[12];
+	public synchronized int[] getSliderData() throws InterruptedException{
+		int sliderData[] = new int[12];
 		for(int i=0;i<12;i++){
-			sliderData[i] = slider[i].getValue()/100.0f;
+			sliderData[i] = slider[i].getValue();
 		}
 		return sliderData;
 	}
-
+	
+	public synchronized void setSliderData(int[] sliderData) throws InterruptedException{
+		for(int i=0;i<12;i++){
+			slider[i].setValue(sliderData[i]); 
+		}
+	}
 	public synchronized void display(String message) throws InterruptedException{
 		debug.setText(message);
 	}

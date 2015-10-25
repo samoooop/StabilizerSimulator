@@ -92,27 +92,32 @@ public class StabilizerLogic {
 
 	int objCount = 0;
 	private Structure lastSubStructure;
+	public int[] currentParameter;
 
 	public void updateControlInput() throws InterruptedException {
-		float[] sliderData = window.getSliderData();
-		for (int i = 0; i < 3; i++) {
-			Leg leg0, leg1;
-			leg0 = stabilizer.base.triLeg.leg[i * 2];
-			leg1 = stabilizer.base.triLeg.leg[i * 2 + 1];
-			leg0.setMotorAngle(sliderData[i * 2], false);
-			leg1.setMotorAngle(sliderData[i * 2 + 1], true);
-			
+		int[] rawSliderData = window.getSliderData();
+		float[] sliderData = new float[12];
+		for (int i = 0; i < 12; i++) {
+			sliderData[i] = rawSliderData[i] / 100.0f;
 		}
-		stabilizer.platform.setPlatformRotation(new Vector3f(
-				(float) Math.toRadians(-(sliderData[6]-45.0f)),
-				(float) Math.toRadians(-(sliderData[8]-45.0f)),
-				(float) Math.toRadians(-(sliderData[7]-45.0f))
-				));
-		stabilizer.platform.setPlatformTranslation(new Vector3f(
-				sliderData[9] - 1.0f,
-				sliderData[10] - 1.0f+1.25f,
-				sliderData[11] - 1.0f
-				));
+		// for (int i = 0; i < 3; i++) {
+		// Leg leg0, leg1;
+		// leg0 = stabilizer.base.triLeg.leg[i * 2];
+		// leg1 = stabilizer.base.triLeg.leg[i * 2 + 1];
+		// leg0.setMotorAngleDegree(sliderData[i * 2], false);
+		// leg1.setMotorAngleDegree(sliderData[i * 2 + 1], true);
+		//
+		// }
+		if(stabilizer.platform.setPlatformRotation(new Vector3f((float) Math.toRadians(-(sliderData[6] - 45.0f)),
+				(float) Math.toRadians(-(sliderData[8] - 45.0f)), (float) Math.toRadians(-(sliderData[7] - 45.0f))))
+		&& stabilizer.platform.setPlatformTranslation(
+				new Vector3f(sliderData[9] - 1.0f, sliderData[10] - 1.0f + 1.25f, sliderData[11] - 1.0f))
+		){
+			currentParameter = rawSliderData;
+		}
+		if(currentParameter != null){
+			window.setSliderData(currentParameter);
+		}
 	}
 
 	public void update() {

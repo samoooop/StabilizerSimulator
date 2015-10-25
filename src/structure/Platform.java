@@ -26,13 +26,13 @@ public class Platform extends Structure {
 	public Vector3f getPlatformTranslation(){
 		return new Vector3f(pTranslation);	
 	}
-	public void setPlatformRotation(Vector3f angles){
+	public boolean setPlatformRotation(Vector3f angles){
 		pRotation = angles;
-		adjustTriLeg();
+		return adjustTriLeg();
 	}
-	public void setPlatformTranslation(Vector3f translation){
+	public boolean setPlatformTranslation(Vector3f translation){
 		pTranslation = translation;
-		adjustTriLeg();
+		return adjustTriLeg();
 	}
 	private double p2(double v){//power of 2
 		return v*v;
@@ -54,7 +54,7 @@ public class Platform extends Structure {
 		if(Float.isNaN(finalMAngle)) throw new MotorAdjustmentException("impossible rotation");
 		return finalMAngle;
 	}
-	public void adjustTriLeg(){
+	public boolean adjustTriLeg(){
 		Vector3f reference[] = {
 				topChamfer.getFinalStart(),
 				topChamfer.getFinalEnd(),
@@ -65,7 +65,7 @@ public class Platform extends Structure {
 		}; 
 		for(int i=0;i<6;i++){
 			try{
-				if(reference[i]==null)return;
+				if(reference[i]==null)return true;
 				Matrix3f rotMat120 = new Matrix3f().rotateY((float)Math.toRadians(-120*(i/2)));
 				reference[i] = new Vector3f(reference[i]);
 				Vector3f motor = new Vector3f(triLeg.leg[i].lowerLeg.getFinalStart());
@@ -82,8 +82,10 @@ public class Platform extends Structure {
 //				System.out.println(i + ":"+motorAngle+":" + triLeg.leg[i].upperLeg.getActualLength());
 			}catch(MotorAdjustmentException failMovement){
 				System.out.println(failMovement + triLeg.leg[i].name);
+				return false;
 			}
 		}
+		return true;
 
 	}
 	@Override
