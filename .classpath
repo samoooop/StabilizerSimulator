@@ -8,5 +8,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Stabilizer/lwjgl_javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="RXTXcomm.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

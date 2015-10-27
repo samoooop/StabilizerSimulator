@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -18,6 +20,7 @@ import structure.Stabilizer;
 import structure.Structure;
 
 public class StabilizerLogic {
+	public Comm comm;
 	public StabilizerControl window;
 	private boolean[] registeredKey = new boolean[1024];
 	private boolean[] isPressing = new boolean[1024];
@@ -49,8 +52,8 @@ public class StabilizerLogic {
 		registeredKey[GLFW_KEY_DOWN] = true;
 		registeredKey[GLFW_KEY_LEFT] = true;
 		registeredKey[GLFW_KEY_RIGHT] = true;
-		registeredKey[GLFW_KEY_KP_ADD] = true;
-		registeredKey[GLFW_KEY_KP_SUBTRACT] = true;
+		registeredKey[GLFW_KEY_X] = true;
+		registeredKey[GLFW_KEY_Z] = true;
 		registeredKey[GLFW_KEY_SPACE] = true;
 	}
 
@@ -61,6 +64,17 @@ public class StabilizerLogic {
 		structure.subStructure.add(stabilizer);
 		structure.subStructure.add(new Axis());
 		StabilizerControl.main(this);
+		comm = new Comm();
+		comm.initialize();
+//		
+//		Thread t=new Thread() {
+//			public void run() {
+//
+//
+//
+//			}
+//		};
+//		t.start();
 	}
 
 	public void keyPress(int key, int scancode, int action, int mods) {
@@ -116,7 +130,23 @@ public class StabilizerLogic {
 			currentParameter = rawSliderData;
 		}
 		if(currentParameter != null){
-			window.setSliderData(currentParameter);
+//			window.setSliderData(currentParameter);
+			
+			try {
+				for(int i=0;i<6;i++){
+					String send = 
+							i+ "" + (int)
+							(Math.toDegrees(stabilizer.base.triLeg.leg[i].getMotorAngle())) + " ";
+					comm.serialWrite(send);
+				}
+
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -136,9 +166,9 @@ public class StabilizerLogic {
 			yaw -= rotationSpeed;
 		if (isPressing[GLFW_KEY_RIGHT])
 			yaw += rotationSpeed;
-		if (isPressing[GLFW_KEY_KP_SUBTRACT])
+		if (isPressing[GLFW_KEY_Z])
 			zoom += 1.0f;
-		if (isPressing[GLFW_KEY_KP_ADD]) {
+		if (isPressing[GLFW_KEY_X]) {
 			if (zoom > 1)
 				zoom -= 1.0f;
 		}

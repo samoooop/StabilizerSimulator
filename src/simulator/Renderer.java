@@ -19,7 +19,7 @@ public class Renderer {
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 	private int WIDTH = 1024;
-	private int HEIGHT = 768;
+	private int HEIGHT = 600;
 	private List<ModuleInterface> modules = new ArrayList<ModuleInterface>();
 	// The window handle
 	private long window;
