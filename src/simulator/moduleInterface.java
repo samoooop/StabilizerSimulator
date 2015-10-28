@@ -1,5 +1,6 @@
 package simulator;
 
 public interface ModuleInterface {
-	public void run(Renderer app);
+	public void init(StabilizerLogic sim)
+	public void run();
 }

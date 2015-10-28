@@ -41,23 +41,14 @@ public class Structure {
 	public Vector3f getFinalEnd(){
 		return finalEnd;
 	}
-	private void drawThis(Color color, Matrix4f transformationMatrix) {
-		glPushMatrix();
+	private void update(Color color, Matrix4f transformationMatrix) {
 		Vector4f finalStart4f = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
 		Vector4f finalEnd4f = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
 		finalStart = new Vector3f(finalStart4f.x, finalStart4f.y, finalStart4f.z);
 		finalEnd = new Vector3f(finalEnd4f.x, finalEnd4f.y, finalEnd4f.z);
-		glLineWidth(5);
-
-		glBegin(GL_LINES);
-		glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
-		glVertex3f(finalStart);
-		glVertex3f(finalEnd);
-		glEnd();
-		glPopMatrix();
 	}
 
-	public AdjustParameter draw(Color color, Matrix4f transformation) {
+	public AdjustParameter updateTransformation(Color color, Matrix4f transformation) {
 		// locate real object location
 		Matrix4f newTransMatrix = new Matrix4f(transformation);
 		newTransMatrix.translate(this.location);
@@ -65,11 +56,11 @@ public class Structure {
 		if (color == null && this.color != null || forcedColor)
 			color = this.color;
 		if (start != null && end != null)
-			drawThis(color ==null ? Color.white: color, newTransMatrix);
+			update(color ==null ? Color.white: color, newTransMatrix);
 		return new AdjustParameter(color, newTransMatrix);
 	}
 
-	public AdjustParameter draw(AdjustParameter param) {
+	public AdjustParameter updateTransformation(AdjustParameter param) {
 		return draw(param.color, param.transformation);
 	}
 
