@@ -89,10 +89,10 @@ public class Platform extends Structure {
 
 	}
 	@Override
-	public AdjustParameter draw(Color color,Matrix4f transformMatrix){
+	public AdjustParameter updateTransformation(Color color,Matrix4f transformMatrix){
 		rotation = pRotation;
 		location = pTranslation;
-		return super.draw(color,transformMatrix);
+		return super.updateTransformation(color,transformMatrix);
 	}
 	public Platform(Stabilizer stabilizer) {
 		super();

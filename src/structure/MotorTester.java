@@ -7,6 +7,7 @@ import org.joml.Matrix3f;
 import org.joml.Vector3f;
 
 import simulator.Renderer;
+import simulator.StabilizerLogic;
 import simulator.ModuleInterface;
 
 public class MotorTester {
@@ -29,12 +30,18 @@ public class MotorTester {
 		}
 
 		@Override
-		public void run(Renderer app) {
+		public void run() {
 			if(init){
 				
 				//app.logic.structure.subStructure.add()
 				init = false;
 			}
+		}
+
+		@Override
+		public void init(StabilizerLogic sim) {
+			// TODO Auto-generated method stub
+			
 		}
 		
 	}//*/

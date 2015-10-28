@@ -1,17 +1,11 @@
 package main;
 
-import java.nio.charset.Charset;
-
-import org.joml.Matrix4f;
-
-import simulator.Renderer;
-import structure.Leg;
+import simulator.StabilizerLogic;
 
 public class Main {
 	public static void main(String[] args){
-		Renderer sim = new Renderer();
+		StabilizerLogic sim = new StabilizerLogic();
 		sim.run();
-		
 	}
 	
 }

@@ -9,43 +9,33 @@ import org.lwjgl.opengl.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import java.awt.Color;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Renderer {
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
 	private int WIDTH = 1024;
 	private int HEIGHT = 600;
-	private float pitch, roll, yaw, zoom = 3;
+	private float pitch=0, roll=0, yaw=0, zoom = 3;
 	Matrix4f projMatrix = new Matrix4f();
 	Matrix4f viewMatrix = new Matrix4f();
-	long firstTime = System.nanoTime();
 	long frameCount = 0;
 	private long window;
 	FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-	public StabilizerLogic logic = new StabilizerLogic();
-
-	private void init() {
+	public void init(GLFWKeyCallback keyCallback) {
 		glfwSetErrorCallback(errorCallback = Callbacks.errorCallbackPrint(System.err));
 		if (glfwInit() != GL11.GL_TRUE)
 			throw new IllegalStateException("Unable to initialize GLFW");
 		glfwDefaultWindowHints(); // optional, the current window hints are
 		glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden
-		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
+		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE); // the window will be resizable
 		window = glfwCreateWindow(WIDTH, HEIGHT, "Renderer", NULL, NULL);
 		if (window == NULL)
 			throw new RuntimeException("Failed to create the GLFW window");
-		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-					glfwSetWindowShouldClose(window, GL_TRUE); // Closing program
-				logic.keyPress(key, scancode, action, mods);
-			}
-		});
+		glfwSetKeyCallback(window,this.keyCallback = keyCallback);
 
 		ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window, (vidmode.asIntBuffer().get(0) - WIDTH) / 2,
@@ -55,26 +45,16 @@ public class Renderer {
 		glfwSwapInterval(1);
 
 		glfwShowWindow(window);
+		
 		GL.createCapabilities();
 		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.1f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.1f,0.0f,0.f,1.0f);
 	}
 
-	public void run() {
-		try {
-
-			init();
-			glfwDestroyWindow(window);
-			keyCallback.release();
-		} finally {
-			glfwTerminate();
-			errorCallback.release();
-		}
+	public boolean windowShouldClose(){
+		return GL_TRUE==glfwWindowShouldClose(window);
 	}
-	private void startDraw() {
-		for(ModuleInterface module:modules){
-			module.run(this);
-		}
+	public void startDraw() {
 		glViewport(0, 0, WIDTH, HEIGHT);
 		projMatrix.setPerspective(45.0f, (float) WIDTH / HEIGHT, 0.01f, 100.0f).get(fb);
 		glMatrixMode(GL_PROJECTION);
@@ -94,23 +74,24 @@ public class Renderer {
 	public float getPitch(){return pitch;}
 	public float getRoll(){return roll;}
 	public float getYaw(){return yaw;}
-	public float getZoom(){return pitch;}
-	public float setPitch(float pitch){
+	public float getZoom(){return zoom;}
+	public void setPitch(float pitch){
 		this.pitch = pitch;
 	}
-	public float setRaw(float pitch){
+	public void setRoll(float roll){
 		this.roll = roll;
 	}
-	public float setYaw(float pitch){
+	public void setYaw(float yaw){
 		this.yaw = yaw;
 	}
-	public float setZoom(float zoom){
+	public void setZoom(float zoom){
 		this.zoom = zoom;
 	}
 	public void drawLine(Vector3f start,Vector3f end,Color color){
 		glPushMatrix();
 		glLineWidth(5);
 		glBegin(GL_LINES);
+		if(color==null)color=Color.white;
 		glColor3f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f);
 		glVertex3f(start);
 		glVertex3f(end);
@@ -123,4 +104,19 @@ public class Renderer {
 		glfwPollEvents();
 	}
 
+	private void glVertex3f(Vector3f vec) {
+		GL11.glVertex3f(vec.x, vec.y, vec.z);
+	}
+	
+	public void destroy(){
+		try {
+			glfwDestroyWindow(window);
+			keyCallback.release();
+		} finally {
+			glfwTerminate();
+			errorCallback.release();
+		}
+	}
 }
+
+

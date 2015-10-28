@@ -10,7 +10,6 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 
 //Currently support only line;
 public class Structure {
@@ -47,7 +46,9 @@ public class Structure {
 		finalStart = new Vector3f(finalStart4f.x, finalStart4f.y, finalStart4f.z);
 		finalEnd = new Vector3f(finalEnd4f.x, finalEnd4f.y, finalEnd4f.z);
 	}
-
+	public boolean isDrawable(){
+		return start != null && end != null;
+	}
 	public AdjustParameter updateTransformation(Color color, Matrix4f transformation) {
 		// locate real object location
 		Matrix4f newTransMatrix = new Matrix4f(transformation);
@@ -55,17 +56,15 @@ public class Structure {
 		newTransMatrix.rotateXYZ(this.rotation.x,this.rotation.y,this.rotation.z);
 		if (color == null && this.color != null || forcedColor)
 			color = this.color;
-		if (start != null && end != null)
+		if (isDrawable())
 			update(color ==null ? Color.white: color, newTransMatrix);
 		return new AdjustParameter(color, newTransMatrix);
 	}
 
 	public AdjustParameter updateTransformation(AdjustParameter param) {
-		return draw(param.color, param.transformation);
+		return updateTransformation(param.color, param.transformation);
 	}
 
-	private void glVertex3f(Vector3f vec) {
-		GL11.glVertex3f(vec.x, vec.y, vec.z);
-	}
+
 
 }

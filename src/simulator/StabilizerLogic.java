@@ -1,7 +1,7 @@
 package simulator;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -11,18 +11,17 @@ import java.util.Queue;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import main.StabilizerControl;
 import structure.AdjustParameter;
 import structure.Axis;
-import structure.Leg;
 import structure.Stabilizer;
 import structure.Structure;
 
 public class StabilizerLogic {
 	public Comm comm;
 	public StabilizerControl window;
-	private boolean[] registeredKey = new boolean[1024];
 	private boolean[] isPressing = new boolean[1024];
 	private float rotationSpeed = (float) (1.0 / 180.0 * Math.PI);
 	public Structure structure;
@@ -38,15 +37,25 @@ public class StabilizerLogic {
 		StabilizerControl.main(this);
 		comm = new Comm();
 		comm.initialize();
-
+		renderer = new Renderer();
 	}
 	public void run(){
-		renderer.init();
-		while (glfwWindowShouldClose(window) == GL_FALSE) {
+		renderer.init( new GLFWKeyCallback() {
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods) {
+				if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+					glfwSetWindowShouldClose(window, GL_TRUE); // Closing program
+				keyPress(key, scancode, action, mods);
+			}
+		});
+		
+		while (!renderer.windowShouldClose()) {
+			update();
 			renderer.startDraw();
-			//draw logic here
+			render();
 			renderer.endDraw();
 		}
+		renderer.destroy();
 	}
 	public void keyPress(int key, int scancode, int action, int mods) {
 		if (action == GLFW_PRESS)
@@ -129,18 +138,18 @@ public class StabilizerLogic {
 			}
 		}
 		if (isPressing[GLFW_KEY_UP])
-			pitch -= rotationSpeed;
+			renderer.setPitch(renderer.getPitch() - rotationSpeed);
 		if (isPressing[GLFW_KEY_DOWN])
-			pitch += rotationSpeed;
+			renderer.setPitch(renderer.getPitch() + rotationSpeed);
 		if (isPressing[GLFW_KEY_LEFT])
-			yaw -= rotationSpeed;
+			renderer.setYaw(renderer.getYaw() - rotationSpeed);
 		if (isPressing[GLFW_KEY_RIGHT])
-			yaw += rotationSpeed;
+			renderer.setYaw(renderer.getYaw() + rotationSpeed);
 		if (isPressing[GLFW_KEY_Z])
-			zoom += 1.0f;
+			renderer.setZoom(renderer.getZoom() - 0.1f);
 		if (isPressing[GLFW_KEY_X]) {
-			if (zoom > 1)
-				zoom -= 1.0f;
+			if (renderer.getZoom() > 1)
+				renderer.setZoom(renderer.getZoom() +0.1f);
 		}
 
 		if (isPressing[GLFW_KEY_SPACE]) {

@@ -12,13 +12,10 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
 import gnu.io.SerialPortEventListener;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
-import javax.xml.stream.events.Characters;
 import org.lwjgl.glfw.*;
 
 public class Comm implements SerialPortEventListener {
