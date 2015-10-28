@@ -10,12 +10,16 @@ import java.io.UnsupportedEncodingException;
 import gnu.io.CommPortIdentifier; 
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent; 
-import gnu.io.SerialPortEventListener; 
+import gnu.io.SerialPortEventListener;
+
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.xml.stream.events.Characters;
-
+import org.lwjgl.glfw.*;
 
 public class Comm implements SerialPortEventListener {
 	SerialPort serialPort;
@@ -28,9 +32,25 @@ public class Comm implements SerialPortEventListener {
 	private BufferedReader input;
 	private OutputStream output;
 	private static final int TIME_OUT = 2000;
-	private static final int DATA_RATE = 19200;
+	private static final int DATA_RATE = 115200;
 
+	private String inputLeftover;
+	private Queue<Block> inputBlockBuffer;
+	
+	public class Block {
+		public String string;
+		public double time;
+		public Block(String string, double time) {
+			super();
+			this.string = string;
+			this.time = time;
+		}
+	}
+	
 	public void initialize() {
+		inputLeftover = "";
+		inputBlockBuffer = new LinkedList<Block>();
+		
 		CommPortIdentifier portId = null;
 		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
@@ -80,13 +100,29 @@ public class Comm implements SerialPortEventListener {
 	/**
 	 * Handle an event on the serial port. Read the data and print it.
 	 */
+	
 	public synchronized void serialEvent(SerialPortEvent oEvent) {
 		if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				String inputLine = "";
+				String rawInput = inputLeftover;
 				while(input.ready())
-					inputLine += input.read() + "\n";
-				System.out.println("input:"+inputLine);
+					rawInput += (char)input.read();
+				//System.out.println("input:"+rawInput);
+				String[] inputLines = rawInput.split("\n");
+				for(int c=0; c<inputLines.length-1; c++){
+					String[] inputBlocks = inputLines[c].split("\t");
+					for(String inputBlock : inputBlocks){
+						if(inputBlock.length() == 0)
+							continue;
+						System.out.println("Block"+inputBlock);
+						/*for(char ch : inputBlock.toCharArray()){
+							System.out.println((int)ch);
+						}*/
+						inputBlockBuffer.add(new Block(inputBlock, GLFW.glfwGetTime()));
+					}
+				}
+				inputLeftover = inputLines[inputLines.length-1];
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -99,4 +135,12 @@ public class Comm implements SerialPortEventListener {
 		return true;
 	}
 
+	public boolean stringBlockReady(){
+		return inputBlockBuffer.size() > 0;
+	}
+	
+	public Block dequeueStringBlock() {
+		return inputBlockBuffer.poll();
+	}
+	
 }
