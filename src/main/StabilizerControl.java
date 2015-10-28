@@ -42,6 +42,7 @@ public class StabilizerControl {
 	String word[] = {"pitch","roll","yaw","x","y","z"};
 	JLabel debug;
 	int max[] = {9000,9000,9000,200,200,200};
+	int def[] = {4500,4500,4500,100,130,100};
 	/**
 	 * Initialize the contents of the frame.
 	 */

@@ -24,7 +24,7 @@ public class StabilizerLogic {
 	public StabilizerControl window;
 	private boolean[] registeredKey = new boolean[1024];
 	private boolean[] isPressing = new boolean[1024];
-	private float pitch, roll, yaw, zoom = 1;
+	private float pitch, roll, yaw, zoom = 3;
 	private float rotationSpeed = (float) (1.0 / 180.0 * Math.PI);
 	public Structure structure;
 	private Queue<Structure> renderQueue = new LinkedList<Structure>();

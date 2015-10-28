@@ -9,7 +9,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Platform extends Structure {
-	private float chamferLength = 0.8f, edgeLength = 4.0f;
+	private float chamferLength = 0.5196152f, edgeLength = 3.21f;
 	
 	public Structure topChamfer = new Structure();
 	public Structure leftChamfer = new Structure();
