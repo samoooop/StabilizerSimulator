@@ -19,7 +19,7 @@ public class Platform extends Structure {
 	public Structure leftEdge = new Structure();
 	public Stabilizer stabilizer;
 	private TriLeg triLeg;
-	private Vector3f pRotation,pTranslation;
+	private Vector3f pRotation = new Vector3f(),pTranslation = new Vector3f(0.0f,1.5f,0.0f);
 	public Vector3f getPlatformRotation(){
 		return new Vector3f(pRotation);
 	}
@@ -65,7 +65,7 @@ public class Platform extends Structure {
 		}; 
 		for(int i=0;i<6;i++){
 			try{
-				if(reference[i]==null)return true;
+				if(reference[i]==null)return false;
 				Matrix3f rotMat120 = new Matrix3f().rotateY((float)Math.toRadians(-120*(i/2)));
 				reference[i] = new Vector3f(reference[i]);
 				Vector3f motor = new Vector3f(triLeg.leg[i].lowerLeg.getFinalStart());
@@ -85,11 +85,15 @@ public class Platform extends Structure {
 				return false;
 			}
 		}
+
 		return true;
 
 	}
 	@Override
 	public AdjustParameter updateTransformation(Color color,Matrix4f transformMatrix){
+		if(pRotation==null||pTranslation==null){
+			return super.updateTransformation(color,transformMatrix);
+		}
 		rotation = pRotation;
 		location = pTranslation;
 		return super.updateTransformation(color,transformMatrix);
@@ -99,7 +103,6 @@ public class Platform extends Structure {
 		this.triLeg = stabilizer.base.triLeg;
 		this.stabilizer = stabilizer;
 		createPlatformTriangle();
-		setPlatformTranslation(new Vector3f(0.0f,1.0f,0.0f));
 	}
 	private void createPlatformTriangle() {
 		myStructure = new Structure();

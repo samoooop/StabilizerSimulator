@@ -111,7 +111,6 @@ public class Comm implements SerialPortEventListener {
 					for(String inputBlock : inputBlocks){
 						if(inputBlock.length() == 0)
 							continue;
-						System.out.println("Block"+inputBlock);
 						/*for(char ch : inputBlock.toCharArray()){
 							System.out.println((int)ch);
 						}*/

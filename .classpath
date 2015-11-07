@@ -2,12 +2,16 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="native"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="lwjgl.jar">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry exported="true" kind="lib" path="lwjgl.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Stabilizer/lwjgl_javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="RXTXcomm.jar"/>
+	<classpathentry exported="true" kind="lib" path="RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Stabilizer/native"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

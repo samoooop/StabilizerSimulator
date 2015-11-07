@@ -17,6 +17,7 @@ public class Structure {
 	private static int idCount=0;
 	private Vector3f finalStart;
 	private Vector3f finalEnd;
+	private Color finalColor;
 	public String name = "";
 	public List<Structure> subStructure;
 	public Structure myStructure;
@@ -40,11 +41,15 @@ public class Structure {
 	public Vector3f getFinalEnd(){
 		return finalEnd;
 	}
+	public Color getFinalColor(){
+		return finalColor;
+	}
 	private void update(Color color, Matrix4f transformationMatrix) {
 		Vector4f finalStart4f = new Vector4f().add(start.x, start.y, start.z, 0).mul(transformationMatrix);
 		Vector4f finalEnd4f = new Vector4f().add(end.x, end.y, end.z, 0).mul(transformationMatrix);
 		finalStart = new Vector3f(finalStart4f.x, finalStart4f.y, finalStart4f.z);
 		finalEnd = new Vector3f(finalEnd4f.x, finalEnd4f.y, finalEnd4f.z);
+		finalColor = color;
 	}
 	public boolean isDrawable(){
 		return start != null && end != null;
