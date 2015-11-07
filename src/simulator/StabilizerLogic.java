@@ -101,13 +101,14 @@ public class StabilizerLogic {
 		// leg1.setMotorAngleDegree(sliderData[i * 2 + 1], true);
 		//
 		// }
-		if(stabilizer.platform.setPlatformRotation(new Vector3f((float) Math.toRadians(-(sliderData[6] - 45.0f)),
-				(float) Math.toRadians(-(sliderData[8] - 45.0f)), (float) Math.toRadians(-(sliderData[7] - 45.0f))))
-		&& stabilizer.platform.setPlatformTranslation(
-				new Vector3f(sliderData[9] - 1.0f, sliderData[10] - 1.0f + 1.25f, sliderData[11] - 1.0f))
-		){
-			currentParameter = rawSliderData;
-		}
+		stabilizer.platform.setPlatformRotation(new Vector3f((float) Math.toRadians(-(sliderData[6] - 45.0f)),
+				(float) Math.toRadians(-(sliderData[8] - 45.0f)),
+				(float) Math.toRadians(-(sliderData[7] - 45.0f))
+				));
+		stabilizer.platform.setPlatformTranslation(
+				new Vector3f(sliderData[9] - 1.0f, sliderData[10] - 1.0f + 1.25f, sliderData[11] - 1.0f)
+				);
+		currentParameter = rawSliderData;
 		if(currentParameter != null){
 //			window.setSliderData(currentParameter);
 

@@ -157,6 +157,7 @@ public class Platform extends Structure {
 		subStructure.add(bottomEdge);
 		
 	}
+	@SuppressWarnings("serial")
 	public class MotorAdjustmentException extends Exception{
 		public MotorAdjustmentException(String message) {
 			super(message);
