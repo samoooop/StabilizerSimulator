@@ -1,3 +1,5 @@
+#include <Servo.h>
+
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #include "Wire.h"
@@ -39,13 +41,13 @@ MPU6050 mpu;
 // not compensated for orientation, so +X is always +X according to the
 // sensor, just without the effects of gravity. If you want acceleration
 // compensated for orientation, us OUTPUT_READABLE_WORLDACCEL instead.
-//#define OUTPUT_READABLE_REALACCEL
+#define OUTPUT_READABLE_REALACCEL
 
 // uncomment "OUTPUT_READABLE_WORLDACCEL" if you want to see acceleration
 // components with gravity removed and adjusted for the world frame of
 // reference (yaw is relative to initial orientation, since no magnetometer
 // is present in this case). Could be quite handy in some cases.
-//#define OUTPUT_READABLE_WORLDACCEL
+#define OUTPUT_READABLE_WORLDACCEL
 
 // uncomment "OUTPUT_TEAPOT" if you want output that matches the
 // format used for the InvenSense teapot demo
@@ -97,10 +99,19 @@ void m(const char *msg){//Message
   Serial.print(msg);
   Serial.print("\t\n");
 }
+void o(){
+  Serial.print("m");
+}
+void e(){
+  Serial.print("\t\n");
+}
+Servo servo[6];
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
-
+    for(int i=0;i<6;i++){
+      servo[i].attach(i+7);
+    }
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
     // really up to you depending on your project)
@@ -155,17 +166,32 @@ void setup() {
         Serial.print(devStatus);
         m(")");
     }
-
+    Serial.print("x\t\n");
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
 }
-
-
-
+char inp[111];
+int sum=0;
+int cur;
+int motorNumber;
+void procInp(){
+  if(inp[cur-1]=='\n'){
+    sum=0;
+    motorNumber = inp[0]-'0';
+    for(int i=1;i<cur-1;i++){
+      sum=sum*10+inp[i]-'0';
+    }
+//    o();
+//    Serial.print(motorNumber*1000 + sum);
+//    e();
+    servo[motorNumber].write(motorNumber%2==0?sum:180-sum);
+    cur=0;
+  }
+}
 // ================================================================
 // ===                    MAIN PROGRAM LOOP                     ===
 // ================================================================
-
+int stepped = 0;
 void loop() {
     // if programming failed, don't try to do anything
     if (!dmpReady) return;
@@ -182,8 +208,12 @@ void loop() {
         // .
         // .
         // .
-    }
 
+    }
+        while(Serial.available()){
+          inp[cur++]=Serial.read();
+          procInp();
+        }
     // reset interrupt flag and get INT_STATUS byte
     mpuInterrupt = false;
     mpuIntStatus = mpu.getIntStatus();
@@ -201,14 +231,16 @@ void loop() {
     } else if (mpuIntStatus & 0x01) {
         // wait for correct available data length, should be a VERY short wait
         while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-
+  
         // read a packet from FIFO
         mpu.getFIFOBytes(fifoBuffer, packetSize);
         
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
-
+//        Serial.print("m");
+//        Serial.print(fifoCount);
+//        Serial.print("\t\n");
         #ifdef OUTPUT_READABLE_QUATERNION
             // display quaternion values in easy matrix form: w x y z
             mpu.dmpGetQuaternion(&q, fifoBuffer);
@@ -239,13 +271,6 @@ void loop() {
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-            Serial.print("g ");
-            Serial.print(ypr[0] * 180/M_PI);
-            Serial.print(" ");
-            Serial.print(ypr[1] * 180/M_PI);
-            Serial.print(" ");
-            Serial.print(ypr[2] * 180/M_PI);
-            Serial.print("\t\n");
         #endif
 
         #ifdef OUTPUT_READABLE_REALACCEL
@@ -254,27 +279,23 @@ void loop() {
             mpu.dmpGetAccel(&aa, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
-            Serial.print("areal\t");
-            Serial.print(aaReal.x);
-            Serial.print("\t");
-            Serial.print(aaReal.y);
-            Serial.print("\t");
-            Serial.println(aaReal.z);
+//            Serial.print("r");
+//            Serial.print(aaReal.x);
+//            Serial.print(" ");
+//            Serial.print(aaReal.y);
+//            Serial.print(" ");
+//            Serial.println(aaReal.z);
+//            Serial.print("\t\n");
         #endif
 
         #ifdef OUTPUT_READABLE_WORLDACCEL
-            // display initial world-frame acceleration, adjusted to remove gravity
-            // and rotated based on known orientation from quaternion
-            mpu.dmpGetQuaternion(&q, fifoBuffer);
-            mpu.dmpGetAccel(&aa, fifoBuffer);
-            mpu.dmpGetGravity(&gravity, &q);
+//             display initial world-frame acceleration, adjusted to remove gravity
+//             and rotated based on known orientation from quaternion
+//            mpu.dmpGetQuaternion(&q, fifoBuffer);
+//            mpu.dmpGetAccel(&aa, fifoBuffer);
+//            mpu.dmpGetGravity(&gravity, &q);
             mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-            Serial.print("aworld\t");
-            Serial.print(aaWorld.x);
-            Serial.print("\t");
-            Serial.print(aaWorld.y);
-            Serial.print("\t");
-            Serial.println(aaWorld.z);
+
         #endif
     
         #ifdef OUTPUT_TEAPOT
@@ -290,9 +311,29 @@ void loop() {
             Serial.write(teapotPacket, 14);
             teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
         #endif
-
-        // blink LED to indicate activity
-        blinkState = !blinkState;
-        digitalWrite(LED_PIN, blinkState);
+        if(stepped%3==0){
+            Serial.print("g");
+            Serial.print(ypr[0]);
+            Serial.print(" ");
+            Serial.print(ypr[1]);
+            Serial.print(" ");
+            Serial.print(ypr[2]);
+            Serial.print("\t\n");;
+            Serial.print("a");
+            Serial.print(aaWorld.x);
+            Serial.print(" ");
+            Serial.print(aaWorld.y);
+            Serial.print(" ");
+            Serial.println(aaWorld.z);
+            Serial.print("\t\n");
+            Serial.print("r");
+            Serial.print(aaReal.x);
+            Serial.print(" ");
+            Serial.print(aaReal.y);
+            Serial.print(" ");
+            Serial.println(aaReal.z);
+            Serial.print("\t\n");
+        }
+        stepped++;
     }
 }

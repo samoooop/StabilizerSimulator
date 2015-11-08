@@ -43,7 +43,6 @@ public class Renderer {
 
 		glfwMakeContextCurrent(window);
 		glfwSwapInterval(1);
-
 		glfwShowWindow(window);
 		
 		GL.createCapabilities();

@@ -10,7 +10,7 @@ import org.joml.Vector4f;
 
 public class Platform extends Structure {
 	private float chamferLength = 0.5196152f, edgeLength = 3.21f;
-	
+	private Vector3f stableTranslation = new Vector3f(0.0f,1.3f,0.0f);
 	public Structure topChamfer = new Structure();
 	public Structure leftChamfer = new Structure();
 	public Structure rightChamfer = new Structure();
@@ -19,7 +19,7 @@ public class Platform extends Structure {
 	public Structure leftEdge = new Structure();
 	public Stabilizer stabilizer;
 	private TriLeg triLeg;
-	private Vector3f pRotation = new Vector3f(),pTranslation = new Vector3f(0.0f,1.5f,0.0f);
+	private Vector3f pRotation = new Vector3f(),pTranslation = new Vector3f(stableTranslation);
 	public Vector3f getPlatformRotation(){
 		return new Vector3f(pRotation);
 	}
@@ -81,8 +81,8 @@ public class Platform extends Structure {
 				triLeg.leg[i].upperLeg.rotation.z = -triLeg.leg[i].rotation.z;
 //				System.out.println(i + ":"+motorAngle+":" + triLeg.leg[i].upperLeg.getActualLength());
 			}catch(MotorAdjustmentException failMovement){
-				System.out.println(failMovement + triLeg.leg[i].name);
-				return false;
+//				System.out.println(failMovement + triLeg.leg[i].name);
+				continue;
 			}
 		}
 
