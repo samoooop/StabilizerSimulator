@@ -1,13 +1,16 @@
 package structure;
 
+import org.joml.Vector3f;
+
 public class Stabilizer extends Structure{
-	private Base base;
-	private Platform platform;
+	public Base base;
+	public Platform platform;
 	public Stabilizer(){
 		super();
 		base = new Base();
-		platform = new Platform();
-		subStructure.add(new Base());
-		subStructure.add(new Platform());
+		platform = new Platform(this);
+		subStructure.add(base);
+		subStructure.add(platform);
+		platform.adjustTriLeg();
 	}
 }

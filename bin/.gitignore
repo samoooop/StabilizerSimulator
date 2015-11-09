@@ -20,5 +20,7 @@
 /lwjgl32.dll
 /main/
 /org/
+/rxtxParallel.dll
+/rxtxSerial.dll
 /simulator/
 /structure/
