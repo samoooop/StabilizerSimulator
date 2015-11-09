@@ -105,12 +105,23 @@ void o(){
 void e(){
   Serial.print("\t\n");
 }
+int mx[] = {
+  123,50,108,51,109,84
+};
+int mn[] = {
+  41,129,30,128,26,163
+};
+
 Servo servo[6];
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
     for(int i=0;i<6;i++){
       servo[i].attach(i+7);
+    }
+    for(int i=0;i<6;i++){
+      delay(1000);
+      servo[i].write(mx[i]);
     }
     // initialize serial communication
     // (115200 chosen because it is required for Teapot Demo output, but it's
@@ -170,6 +181,7 @@ void setup() {
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
 }
+
 char inp[111];
 int sum=0;
 int cur;
@@ -178,13 +190,23 @@ void procInp(){
   if(inp[cur-1]=='\n'){
     sum=0;
     motorNumber = inp[0]-'0';
+    int range = mx[motorNumber]-mn[motorNumber];
+    int negative = 0;
     for(int i=1;i<cur-1;i++){
+      if(inp[i]=='-'){
+        negative=1;
+        continue;
+      }
       sum=sum*10+inp[i]-'0';
     }
+    if(negative)sum*=-1;
 //    o();
 //    Serial.print(motorNumber*1000 + sum);
 //    e();
-    servo[motorNumber].write(motorNumber%2==0?sum:180-sum);
+//    Serial.print("m");
+//    Serial.print(sum);
+//    Serial.print("\t\n");
+    servo[motorNumber].write((int)(sum/90.0*range)+mn[motorNumber]);
     cur=0;
   }
 }
@@ -325,13 +347,6 @@ void loop() {
             Serial.print(aaWorld.y);
             Serial.print(" ");
             Serial.println(aaWorld.z);
-            Serial.print("\t\n");
-            Serial.print("r");
-            Serial.print(aaReal.x);
-            Serial.print(" ");
-            Serial.print(aaReal.y);
-            Serial.print(" ");
-            Serial.println(aaReal.z);
             Serial.print("\t\n");
         }
         stepped++;

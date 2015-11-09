@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -39,17 +41,17 @@ public class StabilizerLogic {
 		structure.subStructure.add(stabilizer);
 		structure.subStructure.add(new Axis());
 		StabilizerControl.main(this);
+
+		renderer = new Renderer();
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				comm = new Comm();
-				comm.initialize();
+
 			}
 		}).start();
-
-		renderer = new Renderer();
-
+		comm = new Comm();
+		comm.initialize();
 	}
 
 	public void run() {
@@ -221,8 +223,16 @@ public class StabilizerLogic {
 		for (int i = 0; i < 6; i++) {
 			String send = i + "" + (int) (Math.toDegrees(stabilizer.base.triLeg.leg[i].getMotorAngle()))
 					+ "\n";
-//			comm.serialWrite(send);
-			System.out.print(send);
+			try {
+				comm.serialWrite(send);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			System.out.print(send);
 		}
 		if (isPressing[GLFW_KEY_UP])
 			renderer.setPitch(renderer.getPitch() - rotationSpeed * diffTime);
